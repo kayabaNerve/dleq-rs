@@ -21,15 +21,6 @@ lazy_static! {
   };
 }
 
-// Doesn't use secp256kfun's due to a rand_core conflict with dalek
-fn random_scalar<R: RngCore + CryptoRng>(r: &mut R) -> Scalar {
-  let mut bytes = [0u8; 32];
-  r.fill_bytes(&mut bytes);
-  Scalar::from_bytes_mod_order(bytes)
-    .mark::<NonZero>()
-    .expect("Randomly generated 32 0-bytes")
-}
-
 #[allow(non_snake_case)]
 #[derive(PartialEq, Clone, Debug)]
 pub struct Signature {
@@ -58,7 +49,7 @@ impl DLEqEngine for Secp256k1Engine {
   }
 
   fn new_private_key<R: RngCore + CryptoRng>(rng: &mut R) -> Self::PrivateKey {
-    random_scalar(rng)
+    Scalar::random(rng)
   }
 
   fn to_public_key(key: &Self::PrivateKey) -> Self::PublicKey {
@@ -95,7 +86,7 @@ impl DLEqEngine for Secp256k1Engine {
         s!(-blinding_key_total * inv_power_of_two).mark::<NonZero>()
           .expect("Blinding key total before final is zero")
       } else {
-        random_scalar(rng)
+        Scalar::random(rng)
       };
       blinding_key_total = s!(blinding_key_total + blinding_key * power_of_two);
       power_of_two = s!(power_of_two * two).mark::<NonZero>().expect("Power of two is zero");

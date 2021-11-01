@@ -30,6 +30,13 @@ pub struct Signature {
   s: Scalar
 }
 
+// Doesn't use dalek's due to a rand_core conflict with dalek
+fn random_scalar<R: RngCore + CryptoRng>(r: &mut R) -> Scalar {
+  let mut bytes = [0u8; 64];
+  r.fill_bytes(&mut bytes);
+  Scalar::from_bytes_mod_order_wide(&bytes)
+}
+
 pub struct RistrettoEngine;
 impl DLEqEngine for RistrettoEngine {
   type PrivateKey = Scalar;
@@ -45,7 +52,7 @@ impl DLEqEngine for RistrettoEngine {
   }
 
   fn new_private_key<R: RngCore + CryptoRng>(rng: &mut R) -> Self::PrivateKey {
-    Scalar::random(rng)
+    random_scalar(rng)
   }
 
   fn to_public_key(key: &Self::PrivateKey) -> Self::PublicKey {
@@ -77,7 +84,7 @@ impl DLEqEngine for RistrettoEngine {
       let blinding_key = if i == (bits - 1) {
         -blinding_key_total * power_of_two.invert()
       } else {
-        Self::new_private_key(rng)
+        random_scalar(rng)
       };
       blinding_key_total += blinding_key * power_of_two;
       power_of_two *= two;

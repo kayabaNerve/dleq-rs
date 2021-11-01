@@ -15,16 +15,15 @@ sha2 = "0.9"
 blake2 = "0.9"
 tiny-keccak = { version = "2.0.2", features = ["keccak"] }
 
-rand_core = "0.5"
+rand_core = "0.6"
 
 curve25519-dalek = { version = "3.2", optional = true }
 
-ff    = { version = "0.10", optional = true }
-group = { version = "0.10", optional = true }
-
-k256   = { version = "0.9", optional = true }
-p256   = { version = "0.9", optional = true }
-jubjub = { version = "0.7", optional = true }
+ff    = { version = "0.11", optional = true }
+group = { version = "0.11", optional = true }
+#k256   = { git = "https://github.com/RustCrypto/elliptic-curves", version = "0.10.0", optional = true }
+#p256   = { git = "https://github.com/RustCrypto/elliptic-curves", version = "0.10.0", optional = true }
+jubjub = { version = "0.8", optional = true }
 
 secp256kfun = { version = "0.6", features = ["std"], default-features = false, optional = true }
 
@@ -44,8 +43,8 @@ default = ["dalek-dleq", "k256-dleq", "serialize"]
 # Until namespaced features are available outside of nightly...
 dalek-dleq = ["curve25519-dalek"]
 ffgroup = ["ff", "group"]
-k256-dleq = ["ffgroup", "k256"]
-p256-dleq = ["ffgroup", "p256"]
+#k256-dleq = ["elliptic-curve", "ffgroup", "k256"]
+#p256-dleq = ["elliptic-curve", "ffgroup", "p256"]
 jubjub-dleq = ["ffgroup", "jubjub"]
 secp256kfun-dleq = ["secp256kfun"]
 serialize = []

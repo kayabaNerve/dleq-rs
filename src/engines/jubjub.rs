@@ -28,7 +28,12 @@ impl FfGroupConversions for JubjubConversions {
   }
 
   fn little_endian_bytes_to_scalar(bytes: [u8; 32]) -> DLEqResult<Self::Scalar> {
-    Fr::from_repr(bytes).ok_or(DLEqError::InvalidScalar)
+    let res = Fr::from_repr(bytes);
+    if res.is_some().into() {
+      Ok(res.unwrap())
+    } else {
+      Err(DLEqError::InvalidScalar)
+    }
   }
 
   fn point_to_bytes(point: &Self::Point) -> Vec<u8> {
