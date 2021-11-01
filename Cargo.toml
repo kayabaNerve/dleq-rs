@@ -38,7 +38,7 @@ rand = "0.7"
 env_logger = "0.9"
 
 [features]
-default = ["dalek-dleq", "k256-dleq", "serialize"]
+default = ["dalek-dleq", "secp256kfun-dleq", "serialize"]
 # dleq appended due to later conflicts with dependency names
 # Until namespaced features are available outside of nightly...
 dalek-dleq = ["curve25519-dalek"]
